@@ -6,14 +6,14 @@ set -e
 echo "Installing MCP Remote Machine Control Server..."
 
 # Check Python version
-if ! python3 --version | grep -E "3\.(8|9|10|11|12)" > /dev/null; then
+if ! python3 --version | grep -E "3\.([8-9]|1[0-9])" > /dev/null; then
     echo "Error: Python 3.8+ required"
     exit 1
 fi
 
 # Install dependencies
 echo "Installing Python dependencies..."
-pip3 install --user -r requirements.txt
+pip install -r requirements.txt
 
 # Make server executable
 chmod +x remote_machine_server.py

@@ -22,8 +22,6 @@ import socket
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.stdio import stdio_server
-from mcp.server.sse import sse_server
-from mcp.types import TextContent, ImageContent, EmbeddedResource
 
 
 class SudoManager:
@@ -430,23 +428,7 @@ def system_info() -> Dict[str, Any]:
 
 async def main():
     """Main server entry point"""
-    import argparse
-    
-    parser = argparse.ArgumentParser(description="MCP Remote Machine Control Server")
-    parser.add_argument("--transport", choices=["stdio", "sse"], default="stdio",
-                       help="Transport type (default: stdio)")
-    parser.add_argument("--host", default="localhost", help="Host for SSE transport")
-    parser.add_argument("--port", type=int, default=8765, help="Port for SSE transport")
-    args = parser.parse_args()
-    
-    if args.transport == "stdio":
-        async with stdio_server() as (read_stream, write_stream):
-            await mcp.run(read_stream, write_stream, mcp.create_initialization_options())
-    
-    elif args.transport == "sse":
-        async with sse_server(host=args.host, port=args.port) as server:
-            logger.info(f"MCP Server running on http://{args.host}:{args.port}")
-            await server.serve(mcp)
+    await mcp.run_stdio_async()
 
 
 if __name__ == "__main__":
